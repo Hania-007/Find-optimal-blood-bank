@@ -40,7 +40,6 @@ def find_closest_donation_center(hospital_address: str, blood_type: str):
     response = requests.get(blood_level_url)
     inventory_data_of_donation_centres = response.json()
 
-    
     closest_donation_center = None
     closest_distance = float("inf")
     
@@ -61,17 +60,15 @@ def find_closest_donation_center(hospital_address: str, blood_type: str):
      
         # Calculate the distance from the hospital to the blood bank
         distance = ((float(hospital_latitude) - float(donation_center_latitude)) ** 2 +
-                  (float(hospital_longitude) - float(donation_center_longitude)) ** 2) ** 0.5 #in nautical miles
+                  (float(hospital_longitude) - float(donation_center_longitude)) ** 2) ** 0.5 #in degrees
         blood_supply_level_value = supply_level_mapping[blood_donation_center_level]      # Check if the blood bank is closer than the current closest blood bank
-        print(distance, city, blood_supply_level_value)
         
         # and if it has a higher level of the specified blood type
         if distance < closest_distance and blood_supply_level_value > supply_level_mapping["moderate"]:
             closest_distance = distance
             closest_donation_center = donation_center
+    return closest_donation_center, blood_supply_level_value
     
-    return closest_donation_center
-
 if __name__=="__main__":
 
     hospital_address = argv[1]
@@ -79,4 +76,5 @@ if __name__=="__main__":
 
     closest_donation_center = find_closest_donation_center(hospital_address, blood_type)
 
-    print(closest_donation_center)
+    print("closest avalaible blood bank address for searched blood type", blood_type, ":", hospital_address)
+ 
